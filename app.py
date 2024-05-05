@@ -10,6 +10,7 @@ from pandalibs.pprint_nosort import pp
 
 # Module imports
 from modules.connect_dice import find_and_connect_to_dice, show_die_data
+from modules.mongodb_atlas import upload_die_result
 from modules.shared_state import SharedState
 
 # Initialized variables
@@ -29,6 +30,7 @@ async def main():
     """Main event loop."""
     await asyncio.gather(
         find_and_connect_to_dice(shared_state),
+        # upload_die_result(shared_state.config["mongodb_atlas_uri"], shared_state.die_data),
         show_die_data(shared_state),
     )
 
