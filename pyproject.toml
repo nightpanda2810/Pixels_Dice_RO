@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "app-template"
-version = "0.1.9"
-description = "Personal starting application structure."
+name = "pixels-dice-ro"
+version = "0.1.0"
+description = "Pixels dice read only connection."
 authors = ["nightpanda2810 <nightpanda2810@gmail.com>"]
 license = "GNU GPLv3"
 readme = "README.md"
