@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "app-template"
-version = "0.1.8"
+version = "0.1.9"
 description = "Personal starting application structure."
 authors = ["nightpanda2810 <nightpanda2810@gmail.com>"]
 license = "GNU GPLv3"
