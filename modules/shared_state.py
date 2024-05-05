@@ -16,12 +16,7 @@ class SharedState:
 
         # Pixels
         self.die_data = {}
-        self.dice_reading_thread = None
-        self.die_name = "Not Connected"
         self.die_connected = False
-        self.die_battery = ""
-        self.latest_roll_face = 0
-        self.latest_rolls = ""
 
         # MISC
         self.session_date = datetime.date.today().strftime("%b %d, %Y")
