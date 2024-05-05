@@ -43,8 +43,7 @@ def upload_die_result(state, uri, data):
         result = collection.insert_one(upload_data)
         print(f"Uploaded data with id: {result.inserted_id}")
         pass
-    except Exception as e:
-        print(e)
+    except Exception:
         raise
 
 
@@ -59,5 +58,5 @@ def show_die_data(uri):
             for document in cursor:
                 data.append(document)
             return [{k: v for k, v in doc.items() if k != "_id"} for doc in data]
-        except:
-            pass
+        except Exception:
+            raise
