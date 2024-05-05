@@ -7,6 +7,8 @@ from nat20 import scan_for_dice
 
 # Personal library imports
 # Module imports
+from modules.mongodb_atlas import upload_die_result
+
 # Initialized variables
 
 
@@ -21,8 +23,10 @@ async def find_and_connect_to_dice(state):
             if available_die.pixel_id == int(die_id, 16):
                 state.die_data[die_id] = {
                     "connected_pixel": available_die.hydrate(),
+                    "die_name": available_die.name,
                     "battery": available_die.batt_level,
                     "session_date": state.session_date,
+                    "time_rolled": "",
                     "die_type": f"D{available_die.face_count}",
                     "last_roll": 0,
                 }
@@ -65,6 +69,9 @@ async def find_and_connect_to_dice(state):
                     if prev_state == 3 and current_state == 1:
                         # Checks if the die was recently rolled (3) and has finished rolling (1) before adjusting the roll face.
                         state.die_data[die_value]["last_roll"] = state.die_data[die_value]["connected_pixel"].roll_face + 1
+                        state.die_data[die_value]["time_rolled"] = time.strftime("%H:%M:%S", time.localtime())
+                        # Upload to database.
+                        upload_die_result(state, state.config["mongodb_atlas_uri"], state.die_data[die_value])
                         if state.config["DEBUG"]:
                             print(f"{state.die_data[die_value]['connected_pixel'].name} rolled: {state.die_data[die_value]['last_roll']}")
                             print(f"Battery: {state.die_data[die_value]['connected_pixel'].batt_level}")
@@ -81,9 +88,3 @@ async def show_die_data(state):
         await asyncio.sleep(1)
         if state.die_connected:
             print(f"{state.die_data}")
-            # for key, value in state.die_data.items():
-            #     await asyncio.sleep(1)
-            #     print(f"Key: {key}, Value: {value}")
-            #     for key, value in value.items():
-            #         await asyncio.sleep(1)
-            #         print(f"Key: {key}, Value: {value}")
