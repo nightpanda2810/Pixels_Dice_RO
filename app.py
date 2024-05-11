@@ -11,6 +11,7 @@ from pandalibs.pprint_nosort import pp
 # Module imports
 from modules.connect_dice import find_and_connect_to_dice
 from modules.shared_state import SharedState
+from modules.web_socket import start_server
 
 # Initialized variables
 shared_state = SharedState()
@@ -29,6 +30,7 @@ async def main():
     """Main event loop."""
     await asyncio.gather(
         find_and_connect_to_dice(shared_state),
+        start_server(shared_state),
     )
 
 
