@@ -39,9 +39,10 @@ def upload_die_result(state, uri, data):
         upload_data = extract_desired_data(data)
         db = client["pixels-die-stats"]
         collection = db["pixels-die-stats"]
-        print(upload_data)
         result = collection.insert_one(upload_data)
-        print(f"Uploaded data with id: {result.inserted_id}")
+        if state.config["DEBUG"]:
+            print(upload_data)
+            print(f"Uploaded data with id: {result.inserted_id}")
         pass
     except Exception:
         raise
