@@ -1,62 +1,103 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'updateModifier') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
-        function: () => {
-          const webSocket = new WebSocket('ws://localhost:8765');
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              function: () => {
+                  const webSocket = new WebSocket('ws://localhost:8765');
+                  const targetSelectors = [
+                      '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.drdAYC',
+                      '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dFkGBp',
+                      '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hvUvxy',
+                  ];
+                  const DUPLICATE_CLASS = "duplicate";
 
-          // Function to find and duplicate elements with the pattern
-          function duplicateElementsByPattern() {
-            const duplicatedElements = [];
-            const allElements = document.querySelectorAll('*'); // Select all elements
+                  // --- DUPLICATION AND INITIALIZATION ---
+                  let randomAddition = 0;
+                  let refreshInterval = null;
 
-            allElements.forEach(element => {
-              const content = element.textContent.trim();
-              if (/^[+-]\d+$/.test(content)) { // Check for "+/-[number]" pattern
-                const duplicatedElement = element.cloneNode(true);
-                element.parentNode.insertBefore(duplicatedElement, element.nextSibling);
-                duplicatedElements.push(duplicatedElement);
-              }
-            });
+                  function initialize() {
+                      removeAllDuplicates(); // Remove any existing duplicates
 
-            return duplicatedElements;
-          }
+                      targetSelectors.forEach(selector => {
+                          const originalElements = document.querySelectorAll(selector);
+                          originalElements.forEach(originalElement => {
+                              const duplicatedElement = originalElement.cloneNode(true);
+                              duplicatedElement.classList.add(DUPLICATE_CLASS);
+                              originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
+                              updateModifier(originalElement, duplicatedElement);
+                          });
+                      });
+                  }
 
-          const duplicatedElements = duplicateElementsByPattern();
-          let randomAddition = 0;
+                  // Remove all duplicates and re-initialize every second
+                  function startRefreshCycle() {
+                      refreshInterval = setInterval(() => {
+                          initialize(); // Re-initialize every second
+                      }, 250); // 1000 milliseconds = 1 second
+                  }
 
-          function updateModifiers() {
-            duplicatedElements.forEach(duplicatedElement => {
-              if (duplicatedElement) {
-                const originalModifier = parseInt(duplicatedElement.previousSibling.textContent.trim(), 10);
-                const total = originalModifier + randomAddition;
+                  // --- INITIALIZATION ---
+                  initialize();
+                  startRefreshCycle(); // Start the refresh cycle
 
-                duplicatedElement.textContent = total;
+                  // --- WEBSOCKET HANDLING ---
+                  webSocket.onmessage = (event) => {
+                      try {
+                          randomAddition = parseInt(event.data, 10);
+                      } catch (error) {
+                          console.error('Error parsing WebSocket data:', error);
+                      }
+                      updateModifiers(); 
+                  };
 
-                if (randomAddition === 1) {
-                  duplicatedElement.style.color = 'red';
-                } else if (randomAddition === 20) {
-                  duplicatedElement.style.color = 'green';
-                } else {
-                  duplicatedElement.style.color = 'yellow';
-                }
-              }
-            });
-          }
+                  function updateModifiers() {
+                      const duplicates = document.querySelectorAll(`.${DUPLICATE_CLASS}`);
+                      duplicates.forEach(duplicatedElement => {
+                          const originalElement = duplicatedElement.previousElementSibling; // Get the original element before the duplicate
+                          updateModifier(originalElement, duplicatedElement);
+                      });
+                  }
 
-          webSocket.onmessage = (event) => {
-            try {
-              randomAddition = parseInt(event.data, 10);
-            } catch (error) {
-              console.error('Error parsing WebSocket data:', error);
-            }
-            updateModifiers();
-          };
+                  // --- HELPER FUNCTIONS ---
+                  function removeAllDuplicates() {
+                      document.querySelectorAll(`.${DUPLICATE_CLASS}`).forEach(el => el.remove());
+                  }
 
-          webSocket.onopen = updateModifiers;
-        },
+                  function extractOriginalModifiers(elements) { 
+                      return elements.map(element => {
+                          const originalModifierText = element.textContent.trim();
+                          if (originalModifierText.includes('/')) {
+                              return originalModifierText.split('/').map(modifier => parseInt(modifier, 10) || 0);
+                          } else if (/^[-+]?\d{1,2}$/.test(originalModifierText)) {
+                              return parseInt(originalModifierText, 10);
+                          } else {
+                              return 0;
+                          }
+                      });
+                  }
+
+                  function updateModifier(originalElement, duplicatedElement) {
+                      const originalModifier = extractOriginalModifiers([originalElement])[0];
+
+                      if (Array.isArray(originalModifier)) {
+                          const newModifiers = originalModifier.map(mod => mod + randomAddition);
+                          duplicatedElement.textContent = newModifiers.join('/');
+                      } else {
+                          const total = originalModifier + randomAddition;
+                          duplicatedElement.textContent = total;
+                      }
+
+                      if (randomAddition === 1) {
+                          duplicatedElement.style.color = 'red';
+                      } else if (randomAddition === 20) {
+                          duplicatedElement.style.color = 'green';
+                      } else {
+                          duplicatedElement.style.color = 'yellow';
+                      }
+                  }
+              },
+          });
       });
-    });
   }
 });
