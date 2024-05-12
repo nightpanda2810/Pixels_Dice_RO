@@ -1,10 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Modifier Updater</title>
+  <title>HLO Pixels Integration Settings</title>
+  <style>
+    body {
+      font-size: smallest; 
+      font-family: sans-serif;
+      width: 310px; /* Adjusted width for two columns */
+      margin-bottom: 5px; 
+      background-color: rgb(190, 188, 188);
+    }
+
+    .container {
+      display: flex; /* Enable flexbox for two-column layout */
+    }
+
+    .column {
+      flex: 1;  /* Each column takes equal space */
+      padding: 5px; /* Add some padding for visual separation */
+    }
+
+    label {
+      font-size: small; 
+      display: block; 
+      margin-top: 5px; 
+    }
+
+    input {
+      margin-bottom: 5px; 
+      margin-top: 5px; 
+      width: 100%; 
+      height: 25px;
+    }
+
+    button {
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    #reload-note { 
+      margin-top: 5px; 
+      margin-bottom: 5px; 
+      font-size: medium; 
+      color: rgb(122, 14, 14); 
+    }
+  </style>
 </head>
 <body>
-  <button id="startButton">Start Updating</button>
-  <script src="popup.js"></script>
+  <h2>Settings</h2>
+
+  <div class="container">
+    <div class="column"> 
+      <h3>Modified Colors</h3>
+      <p>Adjusts colors of modified rolls.</p>
+
+      <label for="color_under_11">Below 11:</label>
+      <input type="color" id="color_under_11" value="#FFFF00"><br> 
+
+      <label for="color_over_ten">Over 10:</label>
+      <input type="color" id="color_over_ten" value="#40E0D0"><br>
+
+      <label for="color_crit_fail">Crit Fail:</label>
+      <input type="color" id="color_crit_fail" value="#FF0000"><br>
+
+      <label for="color_crit_suc">Crit Success:</label>
+      <input type="color" id="color_crit_suc" value="#7CFC00"><br>
+    </div>
+
+    <div class="column"> 
+      <h3>Web Socket</h3>
+      <p>Address configured for companion app web socket.</p>
+      <label for="websocket_host">Host/Port:</label>
+      <input type="text" id="websocket_host" value="localhost:8765"> <br> 
+      
+      <h3>Save</h3>
+      <button id="save">Save Settings</button>
+      <button id="reset">Reset to Defaults</button>
+      <div id="reset-message"></div> 
+
+      <p id="reload-note">You must reload the page for changes to take effect.</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script> 
 </body>
 </html>
