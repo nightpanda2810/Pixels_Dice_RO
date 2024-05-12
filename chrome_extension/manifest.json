@@ -1,9 +1,15 @@
 {
   "manifest_version": 3,
   "name": "HLO Pixels Integration",
-  "version": "1.0",
+  "version": "0.1.0",
+  "icons": {
+    "16": "logo_16.png",
+    "32": "logo_32.png",
+    "48": "logo_48.png",
+    "128": "logo_128.png"  
+  },
+  "description": "Companion extension for Hero Lab Online Pixels Dice integration. WILL NOT function without companion app, not yet released.",
   "permissions": [
-    "activeTab",
     "scripting",
     "storage"
   ],
@@ -19,10 +25,10 @@
   "host_permissions": ["https://herolab.online/characters/*/1/play/*"],
   "action": {
     "default_icon": {
-      "16": "logo.png",
-      "32": "logo.png",
-      "48": "logo.png",
-      "128": "logo.png"  
+      "16": "logo_16.png",
+      "32": "logo_32.png",
+      "48": "logo_48.png",
+      "128": "logo_128.png"  
     },
     "default_popup": "popup.html"
   }
