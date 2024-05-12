@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Modifier Updater",
+  "name": "HLO Pixels Integration",
   "version": "1.0",
   "permissions": [
-      "activeTab",
-      "scripting"
+    "activeTab",
+    "scripting",
+    "storage"
   ],
   "background": {
-      "service_worker": "background.js"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -15,5 +16,14 @@
       "js": ["content.js"]
     }
   ],
-  "host_permissions": ["https://herolab.online/characters/*/1/play/*"]
+  "host_permissions": ["https://herolab.online/characters/*/1/play/*"],
+  "action": {
+    "default_icon": {
+      "16": "logo.png",
+      "32": "logo.png",
+      "48": "logo.png",
+      "128": "logo.png"  
+    },
+    "default_popup": "popup.html"
+  }
 }
