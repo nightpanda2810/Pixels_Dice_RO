@@ -1,1 +1,1 @@
-    chrome.runtime.sendMessage({ action: 'updateModifier' });
+chrome.runtime.sendMessage({ action: 'updateModifier' });
