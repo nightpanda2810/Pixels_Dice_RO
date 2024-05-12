@@ -10,22 +10,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dFkGBp',
                         '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hvUvxy',
                     ];
-                    const DUPLICATE_CLASS = "duplicate";
+                    const DUPLICATE_CLASS = "duplicate"; 
   
                     // --- DUPLICATION AND INITIALIZATION ---
                     let randomAddition = 0;
                     let refreshInterval = null;
   
                     function initialize() {
-                        removeAllDuplicates(); // Remove any existing duplicates
+                        removeAllDuplicates();
   
                         targetSelectors.forEach(selector => {
                             const originalElements = document.querySelectorAll(selector);
                             originalElements.forEach(originalElement => {
-                                const duplicatedElement = originalElement.cloneNode(true);
-                                duplicatedElement.classList.add(DUPLICATE_CLASS);
-                                originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
-                                updateModifier(originalElement, duplicatedElement);
+                                const shouldDuplicate = shouldDuplicateElement(originalElement);
+                                if (shouldDuplicate) {
+                                    const duplicatedElement = originalElement.cloneNode(true);
+                                    duplicatedElement.classList.add(DUPLICATE_CLASS);
+                                    
+                                    // Add margin only to duplicated <span> elements
+                                    if (originalElement.tagName.toLowerCase() === 'span') {
+                                        duplicatedElement.style.marginLeft = '10px'; 
+                                    }
+  
+                                    originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
+                                    updateModifier(originalElement, duplicatedElement);
+                                }
                             });
                         });
                     }
@@ -33,13 +42,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     // Remove all duplicates and re-initialize every second
                     function startRefreshCycle() {
                         refreshInterval = setInterval(() => {
-                            initialize(); // Re-initialize every second
-                        }, 250); // 1000 milliseconds = 1 second
+                            initialize(); 
+                        }, 250); 
                     }
   
                     // --- INITIALIZATION ---
                     initialize();
-                    startRefreshCycle(); // Start the refresh cycle
+                    startRefreshCycle(); 
   
                     // --- WEBSOCKET HANDLING ---
                     webSocket.onmessage = (event) => {
@@ -54,7 +63,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     function updateModifiers() {
                         const duplicates = document.querySelectorAll(`.${DUPLICATE_CLASS}`);
                         duplicates.forEach(duplicatedElement => {
-                            const originalElement = duplicatedElement.previousElementSibling; // Get the original element before the duplicate
+                            const originalElement = duplicatedElement.previousElementSibling; 
                             updateModifier(originalElement, duplicatedElement);
                         });
                     }
@@ -64,36 +73,47 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         document.querySelectorAll(`.${DUPLICATE_CLASS}`).forEach(el => el.remove());
                     }
   
-                    function extractOriginalModifiers(elements) { 
+                    function extractOriginalModifiers(elements) {
                         return elements.map(element => {
                             const originalModifierText = element.textContent.trim();
                             if (originalModifierText.includes('/')) {
-                                return originalModifierText.split('/').map(modifier => parseInt(modifier, 10) || 0);
-                            } else if (/^[-+]?\d{1,2}$/.test(originalModifierText)) {
-                                return parseInt(originalModifierText, 10);
+                                return originalModifierText.split('/').map(modifier => {
+                                    if (/^[-+]/.test(modifier)) { 
+                                        return modifier;
+                                    }
+                                    return null; 
+                                }).filter(Boolean); 
                             } else {
-                                return 0;
+                                return originalModifierText;
                             }
                         });
                     }
   
-                    function updateModifier(originalElement, duplicatedElement) {
-                        const originalModifier = extractOriginalModifiers([originalElement])[0];
+                    function shouldDuplicateElement(element) {
+                        const originalModifierText = element.textContent.trim();
+                        // Check if it's a number with + or - 
+                        return /^[-+]?\d/.test(originalModifierText);
+                    }
   
-                        if (Array.isArray(originalModifier)) {
-                            const newModifiers = originalModifier.map(mod => mod + randomAddition);
-                            duplicatedElement.textContent = newModifiers.join('/');
+                    function updateModifier(originalElement, duplicatedElement) {
+                        const originalModifiers = extractOriginalModifiers([originalElement])[0];
+                        
+                        if (Array.isArray(originalModifiers)) {
+                            const newModifiers = originalModifiers.map(mod => (mod ? parseInt(mod, 10) + randomAddition : null)); 
+                            duplicatedElement.textContent = newModifiers.filter(Boolean).join('/');
                         } else {
-                            const total = originalModifier + randomAddition;
+                            const total = parseInt(originalModifiers, 10) + randomAddition;
                             duplicatedElement.textContent = total;
                         }
   
                         if (randomAddition === 1) {
                             duplicatedElement.style.color = 'red';
-                        } else if (randomAddition === 20) {
-                            duplicatedElement.style.color = 'green';
-                        } else {
-                            duplicatedElement.style.color = 'yellow';
+                          } else if (randomAddition === 20) {
+                              duplicatedElement.style.color = 'lawngreen';
+                          } else if (randomAddition > 10) {
+                              duplicatedElement.style.color = 'turquoise';
+                          } else if (randomAddition < 11) {
+                              duplicatedElement.style.color = 'yellow';
                         }
                     }
                 },
