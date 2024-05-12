@@ -3,13 +3,17 @@
   "name": "Modifier Updater",
   "version": "1.0",
   "permissions": [
-    "activeTab",
-    "scripting"
+      "activeTab",
+      "scripting"
   ],
   "background": {
-    "service_worker": "background.js"
+      "service_worker": "background.js"
   },
-  "action": {
-    "default_popup": "popup.html"
-  }
+  "content_scripts": [
+    {
+      "matches": ["https://herolab.online/characters/*/1/play/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "host_permissions": ["https://herolab.online/characters/*/1/play/*"]
 }
