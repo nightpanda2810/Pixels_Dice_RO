@@ -29,7 +29,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                       // Function to connect (or reconnect) to WebSocket
                       function connectToWebSocket(settings) {
-                        const wsAddress = WS_PROTOCOL + settings.websocket_host;
+                        const isSecureContext = window.location.protocol === 'https:';
+                        const wsProtocol = isSecureContext ? 'wss://' : 'ws://'; // Use wss:// for secure contexts
+                        const wsAddress = wsProtocol + settings.websocket_host;
+
                         webSocket = new WebSocket(wsAddress);
 
                         webSocket.onopen = () => {
