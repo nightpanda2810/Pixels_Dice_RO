@@ -14,10 +14,15 @@ import websockets
 
 
 async def handle_client(websocket, path, state):
-    while True:
-        roll = state.die_data["39de7022"]["last_roll"]
-        await websocket.send(str(roll))  # Send the roll value as a string
-        await asyncio.sleep(1)  # Update every second (adjust as needed)
+    try:
+        while True:
+            roll = state.die_data["39de7022"]["last_roll"]
+            await websocket.send(str(roll))  # Send the roll value as a string
+            await asyncio.sleep(1)  # Update every second (adjust as needed)
+    except websockets.exceptions.ConnectionClosedOK:
+        pass
+    except Exception:
+        raise
 
 
 async def start_server(state):
