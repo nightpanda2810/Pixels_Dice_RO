@@ -22,8 +22,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                           '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hgmlIU', // SF1 Abilities
                           '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hTUvrB', // SF1 Attacks
                           '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dwNcYt', // SF1 Skills, Init, Saves
-                          '.section-skill-total', // Pathbuilder 2e skills
                           '.abilityMod',          // Pathbuilder 2e abilities
+                          '.section-skill-total', // Pathbuilder 2e skills
                         ];
                         const DUPLICATE_CLASS = "duplicate";
                         const WS_PROTOCOL = "ws://";
