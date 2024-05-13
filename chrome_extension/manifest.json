@@ -18,11 +18,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://herolab.online/characters/*/1/play/*"],
+      "matches": ["https://herolab.online/characters/*/1/play/*", "https://pathbuilder2e.com/*"],
       "js": ["content.js"]
     }
   ],
-  "host_permissions": ["https://herolab.online/characters/*/1/play/*"],
+  "host_permissions": ["https://herolab.online/characters/*/1/play/*", "https://pathbuilder2e.com/*"],
   "action": {
     "default_icon": {
       "16": "./logos/logo_16.png",
