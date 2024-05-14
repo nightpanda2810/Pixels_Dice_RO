@@ -21,6 +21,8 @@ async def handle_client(websocket, path, state):
             await asyncio.sleep(1)  # Update every second (adjust as needed)
     except websockets.exceptions.ConnectionClosedOK:
         pass
+    except KeyError as e:
+        print(e)
     except Exception:
         raise
 
