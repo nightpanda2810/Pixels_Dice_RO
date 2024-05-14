@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pixels-dice-ro"
-version = "0.1.0"
+version = "0.1.1"
 description = "Pixels dice read only connection."
 authors = ["nightpanda2810 <nightpanda2810@gmail.com>"]
 license = "GNU GPLv3"
