@@ -13,6 +13,7 @@ from modules.web_socket import start_server
 # Initialized variables
 shared_state = SharedState()
 shared_state.config = get_configuration_data()
+
 # Remainder of the code
 # Print current configuration if DEBUG is true.
 if shared_state.config["DEBUG"]:
