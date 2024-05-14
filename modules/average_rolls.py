@@ -34,13 +34,8 @@ async def average_mongo_data(state):
             formatted_last_rolls = ", ".join(map(str, last_rolls))
 
             if session_date == shared_state.session_date:
-                state.average_rolls = f"Your roll average this session: {int(avg_roll)}"
+                state.average_rolls = f"Roll average: {int(avg_roll)}"
                 state.average_rolls += " - - - "
                 state.average_rolls += f"Last 10: {formatted_last_rolls}"
-
-            # Optional debug prints
-            # print(state.average_rolls)
-            # for key, value in totals.items():
-            #     print(f"You rolled {value} {key}")
 
         await asyncio.sleep(5)
