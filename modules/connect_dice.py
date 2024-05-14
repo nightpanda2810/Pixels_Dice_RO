@@ -52,8 +52,6 @@ class Pixel_Die:
             result = self.die_results[decoded_data]
             self.shared_state.die_data[self.die_id]["last_roll"] = result
             if self.shared_state.config["mongodb_atlas_uri"]:
-                print(self.shared_state.die_data)
-                print(self.shared_state.die_data[self.die_id])
                 upload_die_result(self.shared_state, self.shared_state.config["mongodb_atlas_uri"], self.shared_state.die_data[self.die_id])
             # Printouts for debugging.
             if self.shared_state.config["DEBUG"]:
