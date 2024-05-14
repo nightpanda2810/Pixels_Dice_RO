@@ -7,6 +7,7 @@ from pandalibs.pprint_nosort import pp
 
 # Module imports
 from modules.connect_dice import Pixel_Die
+from modules.mongodb_atlas import update_mongo_shared_data
 from modules.shared_state import SharedState
 from modules.web_socket import start_server
 
@@ -40,6 +41,7 @@ async def main():
     await asyncio.gather(
         start_server(shared_state),
         connect_to_dice(),
+        update_mongo_shared_data(shared_state),
     )
 
 
