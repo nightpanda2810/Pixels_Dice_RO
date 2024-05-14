@@ -21,3 +21,6 @@ class SharedState:
 
         # MISC
         self.session_date = datetime.date.today().strftime("%b %d, %Y")
+
+        # Database
+        self.mongo_data = {}
