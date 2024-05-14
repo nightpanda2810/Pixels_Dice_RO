@@ -24,3 +24,4 @@ class SharedState:
 
         # Database
         self.mongo_data = {}
+        self.average_rolls = ""
