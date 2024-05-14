@@ -61,7 +61,8 @@ class Pixel_Die:
         """Scans for available devices and connects to each configured die."""
         die_connected = False
         while not die_connected:
-            print(f"Scanning for {self.die_name} ID: {self.die_id}")
+            if self.shared_state.config["DEBUG"]:
+                print(f"Scanning for {self.die_name} ID: {self.die_id}")
             devices = await BleakScanner.discover()
             for device in devices:
                 if device.name == self.die_name:
