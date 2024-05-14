@@ -1,22 +1,18 @@
 # Standard library imports
 import asyncio
 
-# Public library imports
-
 # Personal library imports
 from pandalibs.yaml_importer import get_configuration_data
 from pandalibs.pprint_nosort import pp
 
-
 # Module imports
-from modules.connect_dice_old_nat20 import find_and_connect_to_dice
+from modules.connect_dice import connect_to_dice
 from modules.shared_state import SharedState
 from modules.web_socket import start_server
 
 # Initialized variables
 shared_state = SharedState()
 shared_state.config = get_configuration_data()
-
 # Remainder of the code
 # Print current configuration if DEBUG is true.
 if shared_state.config["DEBUG"]:
@@ -29,8 +25,8 @@ if shared_state.config["DEBUG"]:
 async def main():
     """Main event loop."""
     await asyncio.gather(
-        find_and_connect_to_dice(shared_state),
         start_server(shared_state),
+        connect_to_dice(shared_state),
     )
 
 
