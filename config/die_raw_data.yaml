@@ -23,13 +23,6 @@ DIE_RESULTS:
   "030100": 1
 
 
-# Die UUID for Bluetooth communication. DO NOT CHANGE THIS.
-PIXEL_UUID: "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
-
-# Commands to send to die
-DIE_COMMANDS:
-  - WHO_ARE_YOU: b"\x01"
-
 # bytearray(b'\x02\x14     \x04      \x07w\x88\xce     \x94"p\xde9\x98\x1e\xf7\     xdd\x01f\x01\x13K     \x02')
 #                  die_size\die_color                  pixel_id                                   battery_%
 #                  [1]      [2]                        [8-12]reversed                             [20]
