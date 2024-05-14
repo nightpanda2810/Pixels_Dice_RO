@@ -14,6 +14,7 @@ import motor.motor_asyncio
 
 
 def extract_desired_data(data):
+    """Extract the desired data for upload."""
     desired_keys = ["die_name", "session_date", "time_rolled", "die_type", "last_roll"]
     new_data = {}
     for key, value in data.items():
@@ -23,6 +24,7 @@ def extract_desired_data(data):
 
 
 def upload_die_result(state, uri, data):
+    """Upload die results to Mongo."""
     client = MongoClient(uri)
     try:
         upload_data = extract_desired_data(data)
@@ -36,7 +38,8 @@ def upload_die_result(state, uri, data):
         raise
 
 
-async def show_die_data_stuff(uri):
+async def download_die_data_mongo(uri):
+    """Download data from Mongo."""
     client = motor.motor_asyncio.AsyncIOMotorClient(uri)
     db = client["pixels-die-stats"]
     collection = db["pixels-die-stats"]
@@ -50,9 +53,10 @@ async def show_die_data_stuff(uri):
         raise
 
 
-async def show_die_data(state):
+async def update_mongo_shared_data(state):
+    """Updated shared state with mongo data."""
     uri = state.config["mongodb_atlas_uri"]
     # print(state.config["mongodb_atlas_uri"])
     while True:
         await asyncio.sleep(5)
-        state.mongo_data = await show_die_data_stuff(uri)
+        state.mongo_data = await download_die_data_mongo(uri)
