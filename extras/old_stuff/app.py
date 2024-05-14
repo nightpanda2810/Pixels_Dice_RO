@@ -9,7 +9,7 @@ from pandalibs.pprint_nosort import pp
 
 
 # Module imports
-from modules.connect_dice_old_nat20 import find_and_connect_to_dice
+from extras.old_stuff.connect_dice_old_nat20 import find_and_connect_to_dice
 from modules.shared_state import SharedState
 from modules.web_socket import start_server
 
