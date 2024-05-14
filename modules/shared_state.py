@@ -17,6 +17,7 @@ class SharedState:
         # Pixels
         self.die_data = {}
         self.die_connected = False
+        self.die_config = {}
 
         # MISC
         self.session_date = datetime.date.today().strftime("%b %d, %Y")
