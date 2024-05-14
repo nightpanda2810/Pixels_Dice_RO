@@ -13,57 +13,61 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     args: [settings],
                     function: (settings) => {
                         const targetSelectors = [
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.drdAYC', // PF1 Abilities
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hvUvxy', // PF1 Attacks
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dFkGBp', // PF1 Skills, Init, Saves
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bUvLwz', // PF2 Abilities
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.Tqtwx' , // PF2 Attacks
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.eGkTiH', // PF2 Skills, Init, Saves
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hgmlIU', // SF1 Abilities
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hTUvrB', // SF1 Attacks
-                          '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dwNcYt', // SF1 Skills, Init, Saves
-                          '.abilityMod',          // Pathbuilder 2e abilities
-                          '.section-skill-total', // Pathbuilder 2e skills
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.drdAYC', // PF1 Abilities
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hvUvxy', // PF1 Attacks
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dFkGBp', // PF1 Skills, Init, Saves
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bUvLwz', // PF2 Abilities
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.Tqtwx',  // PF2 Attacks
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.eGkTiH', // PF2 Skills, Init, Saves
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hgmlIU', // SF1 Abilities
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hTUvrB', // SF1 Attacks
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dwNcYt', // SF1 Skills, Init, Saves
+                            '.abilityMod',          // Pathbuilder 2e abilities
+                            '.section-skill-total', // Pathbuilder 2e skills
                         ];
                         const DUPLICATE_CLASS = "duplicate";
                         const WS_PROTOCOL = "ws://";
-  
+
                         let webSocket;
                         let randomAddition = 0;
+                        let additionalData = "";
                         let refreshInterval = null;
-  
+
                         // Function to connect (or reconnect) to WebSocket
                         function connectToWebSocket(settings) {
-                          const wsAddress = WS_PROTOCOL + settings.websocket_host;
-                          webSocket = new WebSocket(wsAddress);
-  
-                          webSocket.onopen = () => {
-                              console.log('WebSocket connection opened');
-                          };
-  
-                          webSocket.onmessage = (event) => {
-                              try {
-                                  randomAddition = parseInt(event.data, 10);
-                                  updateModifiers();
-                              } catch (error) {
-                                  console.error('Error parsing WebSocket data:', error);
-                              }
-                          };
-  
-                          webSocket.onclose = (event) => {
-                              console.warn('WebSocket connection closed:', event.code, event.reason);
-                              // Try to reconnect after a delay
-                              setTimeout(() => connectToWebSocket(settings), 3000); // 3 seconds
-                          };
-  
-                          webSocket.onerror = (error) => {
-                              console.error('WebSocket Error:', error);
-                          };
+                            const wsAddress = WS_PROTOCOL + settings.websocket_host;
+                            webSocket = new WebSocket(wsAddress);
+
+                            webSocket.onopen = () => {
+                                console.log('WebSocket connection opened');
+                            };
+
+                            webSocket.onmessage = (event) => {
+                                try {
+                                    const data = JSON.parse(event.data);
+                                    randomAddition = parseInt(data.roll);
+                                    additionalData = data.average;  // Store the additional data
+                                    updateModifiers();
+                                    duplicateAndUpdateSpecificElement();
+                                } catch (error) {
+                                    console.error('Error parsing WebSocket data:', error);
+                                }
+                            };
+
+                            webSocket.onclose = (event) => {
+                                console.warn('WebSocket connection closed:', event.code, event.reason);
+                                // Try to reconnect after a delay
+                                setTimeout(() => connectToWebSocket(settings), 3000); // 3 seconds
+                            };
+
+                            webSocket.onerror = (error) => {
+                                console.error('WebSocket Error:', error);
+                            };
                         }
-  
+
                         function initialize() {
                             removeAllDuplicates();
-  
+
                             targetSelectors.forEach(selector => {
                                 const originalElements = document.querySelectorAll(selector);
                                 originalElements.forEach(originalElement => {
@@ -71,43 +75,47 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                     if (shouldDuplicate) {
                                         const duplicatedElement = originalElement.cloneNode(true);
                                         duplicatedElement.classList.add(DUPLICATE_CLASS);
-  
+
                                         // Add margin only to duplicated <span> elements
                                         if (originalElement.tagName.toLowerCase() === 'span') {
                                             duplicatedElement.style.marginLeft = '10px';
                                         }
-  
+
                                         originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
                                         updateModifier(originalElement, duplicatedElement);
                                     }
                                 });
                             });
                         }
-  
+
                         // Remove all duplicates and re-initialize every second
                         function startRefreshCycle() {
                             refreshInterval = setInterval(() => {
                                 initialize();
+                                duplicateAndUpdateSpecificElement();
                             }, 250);
                         }
-  
+
                         // --- INITIALIZATION ---
-                          connectToWebSocket(settings); // Connect to WebSocket
-                          startRefreshCycle();
-  
+                        connectToWebSocket(settings); // Connect to WebSocket
+                        startRefreshCycle();
+
                         // --- WEBSOCKET HANDLING ---
                         webSocket.onmessage = (event) => {
                             try {
-                                randomAddition = parseInt(event.data, 10);
+                                const data = JSON.parse(event.data);
+                                randomAddition = parseInt(data.roll, 10);
+                                additionalData = data.average;  // Store the additional data
                             } catch (error) {
                                 console.error('Error parsing WebSocket data:', error);
                             }
                             updateModifiers();
+                            duplicateAndUpdateSpecificElement();
                         };
                         webSocket.onerror = (error) => {
-                          console.error('WebSocket Error:', error);
-                      };
-  
+                            console.error('WebSocket Error:', error);
+                        };
+
                         function updateModifiers() {
                             const duplicates = document.querySelectorAll(`.${DUPLICATE_CLASS}`);
                             duplicates.forEach(duplicatedElement => {
@@ -115,12 +123,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 updateModifier(originalElement, duplicatedElement);
                             });
                         }
-  
+
                         // --- HELPER FUNCTIONS ---
                         function removeAllDuplicates() {
                             document.querySelectorAll(`.${DUPLICATE_CLASS}`).forEach(el => el.remove());
                         }
-  
+
                         function extractOriginalModifiers(elements) {
                             return elements.map(element => {
                                 const originalModifierText = element.textContent.trim();
@@ -136,16 +144,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 }
                             });
                         }
-  
+
                         function shouldDuplicateElement(element) {
                             const originalModifierText = element.textContent.trim();
                             // Check if it's a number with + or -
                             return /^\s*[-+]?\d/.test(originalModifierText);
                         }
-  
+
                         function updateModifier(originalElement, duplicatedElement) {
                             const originalModifiers = extractOriginalModifiers([originalElement])[0];
-  
+
                             if (Array.isArray(originalModifiers)) {
                                 const newModifiers = originalModifiers.map(mod => (mod ? parseInt(mod, 10) + randomAddition : null));
                                 duplicatedElement.textContent = newModifiers.filter(Boolean).join('/');
@@ -153,7 +161,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 const total = parseInt(originalModifiers, 10) + randomAddition;
                                 duplicatedElement.textContent = total;
                             }
-  
+
                             // Color Setting Logic (use settings argument)
                             if (randomAddition === 20) {
                                 duplicatedElement.style.color = settings.color_crit_suc;
@@ -164,26 +172,51 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             } else if (randomAddition < 11) { 
                                 duplicatedElement.style.color = settings.color_under_11;
                             }
-                        } 
-  
+                        }
+
+                        // --- NEW FUNCTION FOR SPECIFIC SELECTOR ---
+                        function duplicateAndUpdateSpecificElement() {
+                            const selector = '#root > div.hl-app.App__StyledApp-lgxutJ.kwpiCl > div > div.AppView__MainPanel-hWBBRa.dolPlo > div > div > section > header > div > h1:nth-child(1)';
+                            const originalElement = document.querySelector(selector);
+                            if (originalElement) {
+                                // Remove existing duplicate if present
+                                const existingDuplicate = originalElement.parentNode.querySelector(`.${DUPLICATE_CLASS}`);
+                                if (existingDuplicate) {
+                                    existingDuplicate.remove();
+                                }
+
+                                // Duplicate the element
+                                const duplicatedElement = originalElement.cloneNode(true);
+                                duplicatedElement.classList.add(DUPLICATE_CLASS);
+                                duplicatedElement.textContent = additionalData; // Update with additionalData
+
+                                // Add margin only to duplicated <span> elements
+                                if (originalElement.tagName.toLowerCase() === 'span') {
+                                    duplicatedElement.style.marginLeft = '10px';
+                                }
+
+                                originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
+                            }
+                        }
+
                         // --- SETTINGS UPDATE HANDLING ---
                         chrome.runtime.onMessage.addListener(function(request) {
-                          if (request.action === "updateSettings") {
-                              settings = request.settings;
-  
-                              // Close existing WebSocket connection before updating settings
-                              if (webSocket) {
-                                  webSocket.close();
-                              }
-                              connectToWebSocket(settings); // Reconnect with new settings
-                              updateModifiers(); // Immediately apply new settings
-                          }
-                      });
-  
+                            if (request.action === "updateSettings") {
+                                settings = request.settings;
+
+                                // Close existing WebSocket connection before updating settings
+                                if (webSocket) {
+                                    webSocket.close();
+                                }
+                                connectToWebSocket(settings); // Reconnect with new settings
+                                updateModifiers(); // Immediately apply new settings
+                                duplicateAndUpdateSpecificElement();
+                            }
+                        });
+
                     },
                 });
             });
         });
     }
-  });
-  
+});
