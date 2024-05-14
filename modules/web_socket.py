@@ -16,9 +16,11 @@ import websockets
 async def handle_client(websocket, path, state):
     try:
         while True:
-            roll = state.die_data["39de7022"]["last_roll"]
-            await websocket.send(str(roll))  # Send the roll value as a string
-            await asyncio.sleep(1)  # Update every second (adjust as needed)
+            for die_id, die_name in state.config["dice"].items():
+                if die_name:
+                    roll = state.die_data[die_id]["last_roll"]
+                    await websocket.send(str(roll))  # Send the roll value as a string
+                    await asyncio.sleep(1)  # Update every second (adjust as needed)
     except websockets.exceptions.ConnectionClosedOK:
         pass
     except KeyError as e:
