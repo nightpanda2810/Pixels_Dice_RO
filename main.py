@@ -6,6 +6,7 @@ from pandalibs.yaml_importer import get_configuration_data
 from pandalibs.pprint_nosort import pp
 
 # Module imports
+from modules.average_rolls import average_mongo_data
 from modules.connect_dice import Pixel_Die
 from modules.mongodb_atlas import update_mongo_shared_data
 from modules.shared_state import SharedState
@@ -26,10 +27,12 @@ if shared_state.config["DEBUG"]:
 
 async def connect_to_dice():
     all_dice = []
-    print("Configured Dice:")
+    if shared_state.config["DEBUG"]:
+        print("Configured Dice:")
     for die_id, die_name in shared_state.config["dice"].items():
         if die_name:
-            print(f"Name: {die_id} value: {die_name}")
+            if shared_state.config["DEBUG"]:
+                print(f"Name: {die_id} value: {die_name}")
             all_dice.append(Pixel_Die(die_id, die_name, shared_state))
     for die in all_dice:
         await die.run()
@@ -42,6 +45,7 @@ async def main():
         start_server(shared_state),
         connect_to_dice(),
         update_mongo_shared_data(shared_state),
+        average_mongo_data(shared_state),
     )
 
 
