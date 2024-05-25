@@ -1,5 +1,12 @@
 # Standard library imports
 import asyncio
+import threading
+import time
+import os
+import sys
+
+# Third-party imports
+from PIL import Image
 
 # Personal library imports
 from pandalibs.yaml_importer import get_configuration_data
@@ -11,6 +18,7 @@ from modules.connect_dice import Pixel_Die
 from modules.mongodb_atlas import update_mongo_shared_data
 from modules.shared_state import SharedState
 from modules.web_socket import start_server
+from modules.system_tray import start_system_tray
 
 # Initialized variables
 shared_state = SharedState()
@@ -49,9 +57,28 @@ async def main():
     )
 
 
-# Run the main event loop.
-try:
-    asyncio.run(main())
-except KeyboardInterrupt:
-    if shared_state.config["DEBUG"]:
-        print("Exiting program via Keyboard Interrupt.")
+# Run the main event loop in a separate thread.
+def start_main_event_loop():
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        if shared_state.config["DEBUG"]:
+            print("Exiting program via Keyboard Interrupt.")
+
+
+if __name__ == "__main__":
+    # Start the system tray icon
+    tray_thread = threading.Thread(target=start_system_tray)
+    tray_thread.start()
+
+    # Start the main event loop
+    main_thread = threading.Thread(target=start_main_event_loop)
+    main_thread.start()
+
+    # Keep the script running
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        if shared_state.config["DEBUG"]:
+            print("Exiting program via Keyboard Interrupt.")
