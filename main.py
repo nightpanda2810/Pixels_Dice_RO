@@ -2,11 +2,8 @@
 import asyncio
 import threading
 import time
-import os
-import sys
 
-# Third-party imports
-from PIL import Image
+# Public library imports
 
 # Personal library imports
 from pandalibs.yaml_importer import get_configuration_data
