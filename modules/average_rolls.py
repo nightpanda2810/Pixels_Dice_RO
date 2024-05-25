@@ -34,8 +34,14 @@ async def average_mongo_data(state):
             formatted_last_rolls = ", ".join(map(str, last_rolls))
 
             if session_date == shared_state.session_date:
-                state.average_rolls = f"Roll average: {int(avg_roll)}"
-                state.average_rolls += " - - - "
-                state.average_rolls += f"Last 10: {formatted_last_rolls}"
-
+                try:
+                    state.average_rolls = f"Roll average: {int(avg_roll)}"
+                    state.average_rolls += " - - - "
+                    state.average_rolls += f"Last 10: {formatted_last_rolls}"
+                    # state.average_rolls += " - - - "
+                    # state.average_rolls += f"Battery: {state.die_data[die_name]['battery']}"
+                except Exception as e:
+                    print(e)
+                    print(state.die_data)
+                    pass
         await asyncio.sleep(5)
