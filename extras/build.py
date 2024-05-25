@@ -1,0 +1,1 @@
+# nuitka --standalone --onefile --plugin-enable=pylint-warnings --include-module=bleak --include-module=websockets.legacy --include-module=websockets.legacy.server --include-data-dir=./config=./config .\main.py
