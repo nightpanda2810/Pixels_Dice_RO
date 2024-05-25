@@ -1,1 +1,0 @@
-# nuitka --standalone --onefile --windows-disable-console --windows-icon-from-ico=./extras/logo.ico --plugin-enable=pylint-warnings --include-module=bleak --include-module=websockets.legacy --include-module=websockets.legacy.server --include-data-dir=./config=./config .\main.py
