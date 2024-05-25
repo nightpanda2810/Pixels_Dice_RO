@@ -6,7 +6,7 @@ import binascii
 import time
 
 # Public library imports
-from bleak import BleakScanner, BleakClient
+import bleak
 
 # Personal library imports
 # Module Imports
@@ -63,7 +63,7 @@ class Pixel_Die:
         while not die_connected:
             if self.shared_state.config["DEBUG"]:
                 print(f"Scanning for {self.die_name} ID: {self.die_id}")
-            devices = await BleakScanner.discover()
+            devices = await bleak.BleakScanner.discover()
             for device in devices:
                 if device.name == self.die_name:
                     self.die_device = device
@@ -81,7 +81,7 @@ class Pixel_Die:
                 print("No device to connect to.")
             return
 
-        async with BleakClient(self.die_device.address) as self.client:
+        async with bleak.BleakClient(self.die_device.address) as self.client:
             # Printouts for debugging.
             if self.shared_state.config["DEBUG"]:
                 print(f"Connected to {self.die_device.name} ID: {self.die_id}.")
