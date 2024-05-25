@@ -4,9 +4,14 @@ venv
 dist
 testing
 .VSCodeCounter
+main.dist
+main.onefile-build
 
 # Files
 config.yaml
 chrome_extension.pem
 hlo_pixels_integration.zip
 chrome_extension.crx
+
+# Temporary until dynamic configuration loading is fixed.
+main.exe
