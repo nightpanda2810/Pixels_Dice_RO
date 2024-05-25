@@ -36,7 +36,7 @@ async def average_mongo_data(state):
             if session_date == shared_state.session_date:
                 try:
                     state.average_rolls = f"Roll average: {int(avg_roll)}"
-                    state.average_rolls += " - - - "
+                    state.average_rolls += " --- "
                     state.average_rolls += f"Last 10: {formatted_last_rolls}"
                     # state.average_rolls += " - - - "
                     # state.average_rolls += f"Battery: {state.die_data[die_name]['battery']}"
