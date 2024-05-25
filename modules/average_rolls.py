@@ -29,7 +29,7 @@ async def average_mongo_data(state):
 
         for (die_name, session_date), stats in averaged_data.items():
             avg_roll = stats["average"]
-            totals = stats["totals"]
+            # totals = stats["totals"]
             last_rolls = stats["last_rolls"]
             formatted_last_rolls = ", ".join(map(str, last_rolls))
 
