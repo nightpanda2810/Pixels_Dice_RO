@@ -6,6 +6,8 @@
 
 import subprocess
 import sys
+import shutil
+import os
 
 
 def compile_with_nuitka():
@@ -45,6 +47,13 @@ def compile_with_nuitka():
     except subprocess.CalledProcessError:
         print("Compilation failed:")
         sys.exit(1)
+
+    # Clean up build directories
+    directories_to_delete = ["main.build", "main.dist", "main.onefile-build"]
+    for directory in directories_to_delete:
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
+            print(f"Deleted directory: {directory}")
 
 
 if __name__ == "__main__":
