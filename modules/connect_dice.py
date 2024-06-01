@@ -11,6 +11,7 @@ import bleak
 # Personal library imports
 # Module Imports
 from modules.mongodb_atlas import upload_die_result
+from modules.sound_effects import play_sound
 
 # Initialized variables
 PIXEL_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
@@ -53,6 +54,8 @@ class Pixel_Die:
             self.shared_state.die_data[self.die_id]["last_roll"] = result
             if self.shared_state.config["mongodb_atlas_uri"]:
                 upload_die_result(self.shared_state, self.shared_state.config["mongodb_atlas_uri"], self.shared_state.die_data[self.die_id])
+            if self.shared_state.config["enable_audio"]:
+                play_sound(result)
             # Printouts for debugging.
             if self.shared_state.config["DEBUG"]:
                 self.notification_debug_print(data, decoded_data)

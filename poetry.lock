@@ -445,6 +445,17 @@ python-xlib = {version = ">=0.17", markers = "sys_platform == \"linux\""}
 six = "*"
 
 [[package]]
+name = "python-vlc"
+version = "3.0.20123"
+description = "VLC bindings for python."
+optional = false
+python-versions = "*"
+files = [
+    {file = "python-vlc-3.0.20123.tar.gz", hash = "sha256:244fbb9e392a0326841fca926d6d12a2a36c546982191f493f148fa19e66b1d4"},
+    {file = "python_vlc-3.0.20123-py3-none-any.whl", hash = "sha256:903b3dc3602804958837c69907f3d3485921ef8424c254c7314db3d6037f8d62"},
+]
+
+[[package]]
 name = "python-xlib"
 version = "0.33"
 description = "Python X Library"
@@ -613,4 +624,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2e3817bf7f35d1ae117cc8486e87ebecbeb83ee6ef17f62273d1573d3c44a773"
+content-hash = "1560e7f300d60ad20a1e1d37cf5db17d704a4847aa148fa31967debdfdca4043"
