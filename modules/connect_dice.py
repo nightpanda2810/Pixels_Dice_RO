@@ -52,7 +52,7 @@ class Pixel_Die:
             await self.send_who_are_you_cmd()
             result = self.die_results[decoded_data]
             self.shared_state.die_data[self.die_id]["last_roll"] = result
-            if self.shared_state.config["mongodb_atlas_uri"]:
+            if self.shared_state.config["enable_database"]:
                 upload_die_result(self.shared_state, self.shared_state.config["mongodb_atlas_uri"], self.shared_state.die_data[self.die_id])
             if self.shared_state.config["enable_audio"]:
                 play_sound(result)

@@ -46,12 +46,20 @@ async def connect_to_dice():
 # Main event loop function.
 async def main():
     """Main event loop."""
-    await asyncio.gather(
+    tasks = [
         start_server(shared_state),
         connect_to_dice(),
-        update_mongo_shared_data(shared_state),
-        average_mongo_data(shared_state),
-    )
+    ]
+
+    if shared_state.config["enable_database"]:
+        tasks.extend(
+            [
+                update_mongo_shared_data(shared_state),
+                average_mongo_data(shared_state),
+            ]
+        )
+
+    await asyncio.gather(*tasks)
 
 
 # Run the main event loop in a separate thread.
