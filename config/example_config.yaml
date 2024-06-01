@@ -1,0 +1,52 @@
+# Debugging options.
+DEBUG: False
+DEBUG_LOOP: False
+
+# MongoDB Atlas database configuration. Required for roll history and averages.
+enable_database: False
+mongodb_atlas_uri: ""
+
+# Dice configuration. Connection attempts will only be made if a die name is populated.
+dice: 
+  d20_1: Die_Name
+  d12_1: 
+  d10_1: 
+  d%_1: 
+  d8_1: 
+  d6_1: 
+  d4_1: 
+
+# Audio configuration. If you want sound effects, set to true and configure URLs for your desired sounds.
+enable_audio: True
+
+good_sounds:
+  - "https://www.myinstants.com/media/sounds/final-fantasy-vii-victory-fanfare-1.mp3"
+  - "https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"
+  - "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"
+  - "https://www.myinstants.com/media/sounds/zelda-chest-opening-and-item-catch.mp3"
+  - "https://www.myinstants.com/media/sounds/kids-saying-yay-sound-effect_3.mp3"
+  - "https://www.myinstants.com/media/sounds/everything-is-awesome.mp3"
+  - "https://www.myinstants.com/media/sounds/wootwoot_ringtone.mp3"
+  - "https://www.myinstants.com/media/sounds/nicolas-cage-thats-all-you-had-to-do.mp3"
+
+bad_sounds:
+  - "https://www.myinstants.com/media/sounds/dun-dun-dun-sound-effect-brass_8nFBccR.mp3"
+  - "https://www.myinstants.com/media/sounds/the-price-is-right-losing-horn.mp3"
+  - "https://www.myinstants.com/media/sounds/meme-de-creditos-finales.mp3"
+  - "https://www.myinstants.com/media/sounds/awkward-cricket-sound-effect.mp3"
+  - "https://www.myinstants.com/media/sounds/heknew.mp3"
+  - "https://www.myinstants.com/media/sounds/wilhelmscream.mp3"
+  - "https://www.myinstants.com/media/sounds/oh-no-nono.mp3"
+  - "https://www.myinstants.com/media/sounds/downer_noise.mp3"
+  - "https://www.myinstants.com/media/sounds/epic-fail_V7o3nYs.mp3"
+  - "https://www.myinstants.com/media/sounds/extremely-loud-incorrect-buzzer_0cDaG20.mp3"
+  - "https://www.myinstants.com/media/sounds/youaaaaargh.mp3"
+  - "https://www.myinstants.com/media/sounds/perfect-fart.mp3"
+  - "https://www.myinstants.com/media/sounds/wcgertcz074.mp3"
+  - "https://www.myinstants.com/media/sounds/nicolas-cage-fuuuuuuuu.mp3"
+
+nice:
+  - "https://www.myinstants.com/media/sounds/careless_whispers.mp3"
+
+any_sounds:
+  - "https://www.myinstants.com/media/sounds/shake-and-roll-dice-soundbible.mp3"
