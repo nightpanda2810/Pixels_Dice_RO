@@ -1,3 +1,7 @@
+# DO NOT ADJUST ANYTHING IN THIS FILE UNLESS DIRECTED TO DO SO.
+# THIS FILE IS NOT EMBEDDED INTO THE EXECUTABLE TO MAKE ANY REQUIRED ADJUSTMENTS EASIER 
+# SHOULD THE PIXELS DEVELOPERS CHANGE ANYTHING THAT COULD AFFECT THESE VALUES.
+
 # HEX values of die results.
 DIE_RESULTS:
   "16000a": Stopped rolling.
@@ -22,7 +26,7 @@ DIE_RESULTS:
   "030101": 2
   "030100": 1
 
-
+# THIS IS ONLY HERE FOR REFERENCE
 # bytearray(b'\x02\x14     \x04      \x07w\x88\xce     \x94"p\xde9\x98\x1e\xf7\     xdd\x01f\x01\x13K     \x02')
 #                  die_size\die_color                  pixel_id                                   battery_%
 #                  [1]      [2]                        [8-12]reversed                             [20]
