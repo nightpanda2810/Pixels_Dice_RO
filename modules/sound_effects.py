@@ -21,13 +21,19 @@ def play_sound(die_roll):
         bad_sounds = sound_import["bad_sounds"]
         good_sounds = sound_import["good_sounds"]
         any_sounds = sound_import["any_sounds"]
+        if not sound_import["enable_audio"]:
+            return
         if die_roll == 1:
             url = random.choice(bad_sounds)
         elif die_roll == 20:
             url = random.choice(good_sounds)
         else:
-            url = random.choice(any_sounds)
+            if sound_import["enable_any_sounds"]:
+                url = random.choice(any_sounds)
+            else:
+                url = None
             pass
-        vlc.MediaPlayer(url).play()
+        if url:
+            vlc.MediaPlayer(url).play()
     except Exception as e:
         print(f"There was an error in sound_effects.play_sound: {e}")

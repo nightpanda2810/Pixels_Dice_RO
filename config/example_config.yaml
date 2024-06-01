@@ -16,8 +16,10 @@ dice:
   d6_1: 
   d4_1: 
 
-# Audio configuration. If you want sound effects, set to true and configure URLs for your desired sounds.
+# Audio configuration. any_sounds will be played whenever the die is rolled unless enable_any_sounds is set to False.
+# Audio settings can be adjusted while the program is running.
 enable_audio: True
+enable_any_sounds: False
 
 good_sounds:
   - "https://www.myinstants.com/media/sounds/final-fantasy-vii-victory-fanfare-1.mp3"
