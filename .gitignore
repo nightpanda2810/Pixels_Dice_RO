@@ -12,6 +12,3 @@ config.yaml
 chrome_extension.pem
 hlo_pixels_integration_chrome_extension.zip
 chrome_extension.crx
-
-# Temporary until dynamic configuration loading is fixed.
-main.exe
