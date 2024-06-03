@@ -81,7 +81,7 @@ This is the simplest way to use this app, requiring minimal setup. More advanced
 6. Load a character in Hero Lab Online or Pathbuilder 2e Online.
     - If you do not see duplicated modifiers, refresh the page. You should see these even if main.exe is not running.
     - Without a die rolled, the additional data on screen will be yellow in color.
-        - <img src="./extras_extra/example.png" width="400">
+        - See main screenshots at top of the page.
 7. Run main.exe
     - A tray icon will appear in Windows.
 8. To quit, right-click on the tray icon and click quit.
