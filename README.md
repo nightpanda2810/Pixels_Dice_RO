@@ -22,6 +22,8 @@ Simple application with Chrome extension to show modified rolls directly within 
         * I do not believe this is worth fixing, as it will require a significant re-write of the Chrome extension. Most items are done dynamically, and fixing this requires targeting most items specifically, making the code more complex.
 * Pathbuilder
     * Not all modifiers are supported.
+* Required software
+    * VLC Media Player must be installed to lauch the companion app.
 
 
 ### Limitations
