@@ -13,15 +13,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     args: [settings],
                     function: (settings) => {
                         const targetSelectors = [
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.drdAYC', // PF1 Abilities
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hvUvxy', // PF1 Attacks
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dFkGBp', // PF1 Skills, Init, Saves
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bUvLwz', // PF2 Abilities
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.Tqtwx',  // PF2 Attacks
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.eGkTiH', // PF2 Skills, Init, Saves
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hgmlIU', // SF1 Abilities
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.hTUvrB', // SF1 Attacks
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dwNcYt', // SF1 Skills, Init, Saves
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.iSLwJv', // PF1 Abilities
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bfEkfm', // PF1 Attacks
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.jwpVvh', // PF1 Skills, Init, Saves
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.kxURXE', // PF2 Abilities
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bYdjKO', // PF2 Attacks
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.irWQEY', // PF2 Skills, Init, Saves
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bYselo', // SF1 Abilities
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dDKJNn', // SF1 Attacks
+                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dzPKSE', // SF1 Skills, Init, Saves
                             '.abilityMod',          // Pathbuilder 2e abilities
                             '.section-skill-total', // Pathbuilder 2e skills
                         ];
