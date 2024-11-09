@@ -69,7 +69,7 @@ This is the simplest way to use this app, requiring minimal setup. More advanced
 - You MUST have the Pixels app on your phone completely shut down, otherwise the die will not connect to your computer. It helps if you have connect/disconnect flashes configured for your die.
 1. Install Chrome extension into your browser.
 2. Install VLC Media Player (currently required to run, even without sound effects enabled).
-3. Place main.exe in a folder.
+3. Place one or both main.exe in a folder. Console version available to help with troubleshooting.
     - You can rename this file if you'd like.
 4. Within this folder, a folder named "config" containing config.yaml and die_raw_data.yaml.
     - You can copy the config folder from this repository, rename example_config.yaml to config.yaml.
