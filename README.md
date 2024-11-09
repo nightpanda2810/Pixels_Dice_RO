@@ -18,12 +18,12 @@ Simple application with Chrome extension to show modified rolls directly within 
     * Suspect rolling the die a single time stops this behaviour, but is untested. As far as I can tell, the die is not going to sleep. 
     * I have played in 2 sessions so far with this current version of the app, and this has only happened before we started rolling. I never had to restart the app during 4-6 hour long sessions.
 * Herolab
-    * The right sidebar, the AC is being duplicated, and various other modifers are not. 
-        * I do not believe this is worth fixing, as it will require a significant re-write of the Chrome extension. Most items are done dynamically, and fixing this requires targeting most items specifically, making the code more complex.
+    * The right sidebar has inconsistent results. Some items work, and some duplicate that are undesirable. 
+        * I do not believe this is worth fixing, as it will require a significant re-write of the Chrome extension. Most items are done dynamically, and fixing this requires targeting most items specifically, making the code more complex. Also does anyone actually use this? It's all duplicate information to me. 
 * Pathbuilder
     * Not all modifiers are supported.
 * Required software
-    * VLC Media Player must be installed to lauch the companion app.
+    * VLC Media Player must be installed or the companion app will not function.
 
 
 ### Limitations
@@ -89,8 +89,11 @@ This is the simplest way to use this app, requiring minimal setup. More advanced
     - A tray icon will appear in Windows.
 8. To quit, right-click on the tray icon and click quit.
 
+### Roll averages
+- You must create a MongoDB Atlas account and create a database. I don't have instructions for this at this time.
+
 ### Additional information
-- The Chrome extension is configurable. DO NOT modify Host/Port. I haven't found a way to make this work yet without a certificate. Feature may be removed.
+- The Chrome extension is configurable. DO NOT modify Host/Port. I haven't found a way to make this work yet without a certificate. Feature likely to be removed.
 - Firmware versions newer than 3-25-2024 may not work, if anything breaks fixes will come after I receive my additional dice.
 - If you are going through the trouble of setting up the Mongo database for roll averages, please be aware the averages displayed within HLO take longer to update than the rest of the modifiers. 
 
