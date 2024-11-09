@@ -32,9 +32,45 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 return false;
                             }
 
-                            // Only duplicate if it contains a +, -, or /. (/ is included due to Maneuvers not lining up properly if not duplicated, even though blank.)
+                            // Only duplicate if it contains a +, -, or /
                             return /[+\-/]/.test(originalModifierText);
                         };
+
+                        function insertRollAverages() {
+                            const selectors = [
+                                '#root > div.hl-app.sc-epsdGI.fYIFyx > div > div.sc-RpuvT.kJWQyW > div > div > section > header > div > h1:nth-child(1)',
+                                '#root > div.hl-app.sc-epsdGI.ACFHw > div > div.sc-RpuvT.kJWQyW > div > div > section > header > div > h1',
+                                '#root > div.hl-app.sc-epsdGI.fGRJat > div > div.sc-RpuvT.kJWQyW > div > div > section > header > div > h1',
+                            ];
+                        
+                            let originalElement = null;
+                        
+                            // Loop through selectors and find the first match
+                            for (const selector of selectors) {
+                                originalElement = document.querySelector(selector);
+                                if (originalElement) {
+                                    break; // Exit the loop once we find a matching element
+                                }
+                            }
+                        
+                            // Only proceed if an element was found
+                            if (originalElement) {
+                                const existingDuplicate = originalElement.parentNode.querySelector(`.${DUPLICATE_CLASS}`);
+                                if (existingDuplicate) {
+                                    existingDuplicate.remove();
+                                }
+                        
+                                const duplicatedElement = originalElement.cloneNode(true);
+                                duplicatedElement.classList.add(DUPLICATE_CLASS);
+                                duplicatedElement.textContent = additionalData;
+                        
+                                if (originalElement.tagName.toLowerCase() === 'span') {
+                                    duplicatedElement.style.marginLeft = '10px';
+                                }
+                        
+                                originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
+                            }
+                        }
 
                         const DUPLICATE_CLASS = "duplicate";
                         const WS_PROTOCOL = "ws://";
@@ -58,7 +94,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                     randomAddition = parseInt(data.roll);
                                     additionalData = data.average;
                                     updateModifiers();
-                                    duplicateAndUpdateSpecificElement();
+                                    insertRollAverages();
                                 } catch (error) {
                                     console.error('Error parsing WebSocket data:', error);
                                 }
@@ -98,7 +134,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         function startRefreshCycle() {
                             refreshInterval = setInterval(() => {
                                 initialize();
-                                duplicateAndUpdateSpecificElement();
+                                insertRollAverages();
                             }, 250);
                         }
 
@@ -114,7 +150,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 console.error('Error parsing WebSocket data:', error);
                             }
                             updateModifiers();
-                            duplicateAndUpdateSpecificElement();
+                            insertRollAverages();
                         };
 
                         webSocket.onerror = (error) => {
@@ -171,27 +207,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             }
                         }
 
-                        function duplicateAndUpdateSpecificElement() {
-                            const selector = '#root > div.hl-app.App__StyledApp-lgxutJ.kwpiCl > div > div.AppView__MainPanel-hWBBRa.dolPlo > div > div > section > header > div > h1:nth-child(1)';
-                            const originalElement = document.querySelector(selector);
-                            if (originalElement) {
-                                const existingDuplicate = originalElement.parentNode.querySelector(`.${DUPLICATE_CLASS}`);
-                                if (existingDuplicate) {
-                                    existingDuplicate.remove();
-                                }
-
-                                const duplicatedElement = originalElement.cloneNode(true);
-                                duplicatedElement.classList.add(DUPLICATE_CLASS);
-                                duplicatedElement.textContent = additionalData;
-
-                                if (originalElement.tagName.toLowerCase() === 'span') {
-                                    duplicatedElement.style.marginLeft = '10px';
-                                }
-
-                                originalElement.parentNode.insertBefore(duplicatedElement, originalElement.nextSibling);
-                            }
-                        }
-
                         chrome.runtime.onMessage.addListener(function(request) {
                             if (request.action === "updateSettings") {
                                 settings = request.settings;
@@ -201,7 +216,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 }
                                 connectToWebSocket(settings);
                                 updateModifiers();
-                                duplicateAndUpdateSpecificElement();
+                                insertRollAverages();
                             }
                         });
 
