@@ -70,13 +70,14 @@ This is the simplest way to use this app, requiring minimal setup. More advanced
 - You MUST have the Pixels app on your phone completely shut down, otherwise the die will not connect to your computer. It helps if you have connect/disconnect flashes configured for your die.
 1. Install Chrome extension into your browser.
 2. Install VLC Media Player (currently required to run, even without sound effects enabled).
-3. Place one or both main.exe in a folder. Console version available to help with troubleshooting.
+3. Download one or both .exe and the Config folder. Place one or both main.exe in your desired location. Console version available to help with troubleshooting.
     - You can rename this file if you'd like.
-4. Within this folder, a folder named "config" containing config.yaml and die_raw_data.yaml.
-    - You can copy the config folder from this repository, rename example_config.yaml to config.yaml.
-        - <img src="./extras_extra/folder_ss1.png" width="300"> <img src="./extras_extra/folder_ss2.png" width="300">>
+4. Within this folder, create config.yaml, or rename example_config.yaml.
+    - die_raw_data.yaml IS REQUIRED, but DO NOT modify this. I did it this way to make any updates easier should they be necessary.
+    - <img src="./extras_extra/folder_ss1.png" width="300"> <img src="./extras_extra/folder_ss2.png" width="300">>
 5. Populate config.yaml with your required settings.
     1. From the Pixels app, get your die name. 
+        - Note: If there are multiple dice with the same name, there will probably be some sort of issue. Likely simply connecting to the incorrect die. 
         - In this screenshot, "Aurora" is the die name.
         - <img src="./extras_extra/pixels_ss.png" width="200">
     2. DO NOT configure more than a single D20. 
