@@ -35,6 +35,7 @@ Simple application with Chrome extension to show modified rolls directly within 
 
 ### To-Do
 * Make it work without VLC Media Player installed if enable_audio is set to false, or use a different audio library.
+* Local database for averages.
 
 
 # Testing
@@ -51,7 +52,7 @@ Simple application with Chrome extension to show modified rolls directly within 
 
 ## What I'd like tested, outside general usage
 - App hanging if open and unused. 
-    - I have no idea what is causing this. It may be normal and expected, but I don't have enough data to know for sure.
+    - I have no idea what is causing this. It may be normal and expected, but I don't have enough data to know for sure. It seems to be mitigated by rolling the die for the first time, then runs all night. 
 - HeroLab
     - D20 game 
 - Mac OS
@@ -90,9 +91,11 @@ This is the simplest way to use this app, requiring minimal setup. More advanced
 
 ### Additional information
 - The Chrome extension is configurable. DO NOT modify Host/Port. I haven't found a way to make this work yet without a certificate. Feature may be removed.
+- Firmware versions newer than 3-25-2024 may not work, if anything breaks fixes will come after I receive my additional dice.
+- If you are going through the trouble of setting up the Mongo database for roll averages, please be aware the averages displayed within HLO take longer to update than the rest of the modifiers. 
 
 ### Advanced
-These steps are for Windows, but should be similar in Linux. Mac OS you are on your own. You may need a basic understanding on how to setup a Python application.
+These steps are for Windows, but should be similar in Linux. Mac OS you are on your own. You will need a basic understanding on how to setup a Python application.
 1. Install Python 3.11.x (3.12 will not work)
 2. Install poetry package: pip install poetry
 3. Download this repository as a zip file and extract it to your desired location.
