@@ -12,19 +12,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     target: { tabId: tabs[0].id },
                     args: [settings],
                     function: (settings) => {
+
+                        // --- SELECTION VARIABLES ---
                         const targetSelectors = [
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.iSLwJv', // PF1 Abilities
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bfEkfm', // PF1 Attacks
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.jwpVvh', // PF1 Skills, Init, Saves
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.kxURXE', // PF2 Abilities
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bYdjKO', // PF2 Attacks
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.irWQEY', // PF2 Skills, Init, Saves
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.bYselo', // SF1 Abilities
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dDKJNn', // SF1 Attacks
-                            '.Item-gYKFub.jnsGWt.Text__StyledText-inVtPV.dzPKSE', // SF1 Skills, Init, Saves
-                            '.abilityMod',          // Pathbuilder 2e abilities
-                            '.section-skill-total', // Pathbuilder 2e skills
+                            'td.sc-iiUIRa.dEzMkq',                    // PF1/2 Abilities, Saves, Skills
+                            'span.sc-kTUwUJ.fpuwiR.sc-jtRfpW.htdZow', // PF1 Attacks
+                            'td.sc-iiUIRa.fOEbpe',                    // PF1 Performance Combat, CMB
+                            'span.sc-kTUwUJ.fpuwiR.sc-jtRfpW.bPGWdS', // PF2 Attacks
+                            'span.sc-kTUwUJ.fpuwiR.sc-jtRfpW.fuRnak', // SF1 Attacks
+                            '.abilityMod',                            // Pathbuilder 2e abilities
+                            '.section-skill-total',                   // Pathbuilder 2e skills
                         ];
+
+                        const shouldDuplicateElement = (element) => {
+                            const originalModifierText = element.textContent.trim();
+
+                            // Exclude elements containing specific keywords
+                            if (/\b(lbs|gp|sp|cp|bulk|Light|Medium|Heavy|KAC)\b/.test(originalModifierText)) {
+                                return false;
+                            }
+
+                            // Only duplicate if it contains a +, -, or /. (/ is included due to Maneuvers not lining up properly if not duplicated, even though blank.)
+                            return /[+\-/]/.test(originalModifierText);
+                        };
+
                         const DUPLICATE_CLASS = "duplicate";
                         const WS_PROTOCOL = "ws://";
 
@@ -33,7 +44,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         let additionalData = "";
                         let refreshInterval = null;
 
-                        // Function to connect (or reconnect) to WebSocket
                         function connectToWebSocket(settings) {
                             const wsAddress = WS_PROTOCOL + settings.websocket_host;
                             webSocket = new WebSocket(wsAddress);
@@ -46,7 +56,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 try {
                                     const data = JSON.parse(event.data);
                                     randomAddition = parseInt(data.roll);
-                                    additionalData = data.average;  // Store the additional data
+                                    additionalData = data.average;
                                     updateModifiers();
                                     duplicateAndUpdateSpecificElement();
                                 } catch (error) {
@@ -56,8 +66,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                             webSocket.onclose = (event) => {
                                 console.warn('WebSocket connection closed:', event.code, event.reason);
-                                // Try to reconnect after a delay
-                                setTimeout(() => connectToWebSocket(settings), 3000); // 3 seconds
+                                setTimeout(() => connectToWebSocket(settings), 3000);
                             };
 
                             webSocket.onerror = (error) => {
@@ -71,12 +80,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             targetSelectors.forEach(selector => {
                                 const originalElements = document.querySelectorAll(selector);
                                 originalElements.forEach(originalElement => {
-                                    const shouldDuplicate = shouldDuplicateElement(originalElement);
-                                    if (shouldDuplicate) {
+                                    if (shouldDuplicateElement(originalElement)) {
                                         const duplicatedElement = originalElement.cloneNode(true);
                                         duplicatedElement.classList.add(DUPLICATE_CLASS);
 
-                                        // Add margin only to duplicated <span> elements
                                         if (originalElement.tagName.toLowerCase() === 'span') {
                                             duplicatedElement.style.marginLeft = '10px';
                                         }
@@ -88,7 +95,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             });
                         }
 
-                        // Remove all duplicates and re-initialize every second
                         function startRefreshCycle() {
                             refreshInterval = setInterval(() => {
                                 initialize();
@@ -96,22 +102,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             }, 250);
                         }
 
-                        // --- INITIALIZATION ---
-                        connectToWebSocket(settings); // Connect to WebSocket
+                        connectToWebSocket(settings);
                         startRefreshCycle();
 
-                        // --- WEBSOCKET HANDLING ---
                         webSocket.onmessage = (event) => {
                             try {
                                 const data = JSON.parse(event.data);
                                 randomAddition = parseInt(data.roll, 10);
-                                additionalData = data.average;  // Store the additional data
+                                additionalData = data.average;
                             } catch (error) {
                                 console.error('Error parsing WebSocket data:', error);
                             }
                             updateModifiers();
                             duplicateAndUpdateSpecificElement();
                         };
+
                         webSocket.onerror = (error) => {
                             console.error('WebSocket Error:', error);
                         };
@@ -124,7 +129,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             });
                         }
 
-                        // --- HELPER FUNCTIONS ---
                         function removeAllDuplicates() {
                             document.querySelectorAll(`.${DUPLICATE_CLASS}`).forEach(el => el.remove());
                         }
@@ -145,12 +149,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             });
                         }
 
-                        function shouldDuplicateElement(element) {
-                            const originalModifierText = element.textContent.trim();
-                            // Check if it's a number with + or -
-                            return /^\s*[-+]?\d/.test(originalModifierText);
-                        }
-
                         function updateModifier(originalElement, duplicatedElement) {
                             const originalModifiers = extractOriginalModifiers([originalElement])[0];
 
@@ -162,7 +160,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 duplicatedElement.textContent = total;
                             }
 
-                            // Color Setting Logic (use settings argument)
                             if (randomAddition === 20) {
                                 duplicatedElement.style.color = settings.color_crit_suc;
                             } else if (randomAddition === 1) {
@@ -174,23 +171,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             }
                         }
 
-                        // --- NEW FUNCTION FOR SPECIFIC SELECTOR ---
                         function duplicateAndUpdateSpecificElement() {
                             const selector = '#root > div.hl-app.App__StyledApp-lgxutJ.kwpiCl > div > div.AppView__MainPanel-hWBBRa.dolPlo > div > div > section > header > div > h1:nth-child(1)';
                             const originalElement = document.querySelector(selector);
                             if (originalElement) {
-                                // Remove existing duplicate if present
                                 const existingDuplicate = originalElement.parentNode.querySelector(`.${DUPLICATE_CLASS}`);
                                 if (existingDuplicate) {
                                     existingDuplicate.remove();
                                 }
 
-                                // Duplicate the element
                                 const duplicatedElement = originalElement.cloneNode(true);
                                 duplicatedElement.classList.add(DUPLICATE_CLASS);
-                                duplicatedElement.textContent = additionalData; // Update with additionalData
+                                duplicatedElement.textContent = additionalData;
 
-                                // Add margin only to duplicated <span> elements
                                 if (originalElement.tagName.toLowerCase() === 'span') {
                                     duplicatedElement.style.marginLeft = '10px';
                                 }
@@ -199,17 +192,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             }
                         }
 
-                        // --- SETTINGS UPDATE HANDLING ---
                         chrome.runtime.onMessage.addListener(function(request) {
                             if (request.action === "updateSettings") {
                                 settings = request.settings;
 
-                                // Close existing WebSocket connection before updating settings
                                 if (webSocket) {
                                     webSocket.close();
                                 }
-                                connectToWebSocket(settings); // Reconnect with new settings
-                                updateModifiers(); // Immediately apply new settings
+                                connectToWebSocket(settings);
+                                updateModifiers();
                                 duplicateAndUpdateSpecificElement();
                             }
                         });
