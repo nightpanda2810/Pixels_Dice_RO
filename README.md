@@ -4,6 +4,7 @@ Simple application with Chrome extension to show modified rolls directly within 
 
 <img src="./extras_extra/hlo_example.png" width="800">
 <img src="./extras_extra/pathbuild_example.png" width="800">
+<img src="./extras_extra/extension_settings.png" width="200">
 
 
 ## Known Isues and Limitations
@@ -30,6 +31,7 @@ Simple application with Chrome extension to show modified rolls directly within 
 * Your die must NOT be connected to your phone. On Android, simply closing the Pixels app works. I assume the same for IOS.
     * This will always be true.
 * Only a single D20 is supported.
+* If you are using Brave browser, you must disable shields for HeroLab and PathBuilder in order for the extension to communicate with the companion application.
 * Only the online MongoDB Atlas database is supported for roll history and averages.
 
 
@@ -66,7 +68,7 @@ Simple application with Chrome extension to show modified rolls directly within 
 This is the simplest way to use this app, requiring minimal setup. More advanced (and as a result a bit more secure) section below. 
 - Your system may flag this as a virus, as it is my understanding packaging an EXE with Python is weird. When I ran it through virustotal it gave me a heart attack until I did some research! I simply run Defender and it was fine.
 - Here is a screenshot of the safety library scan on this project.
-    - <img src="./extras_extra/safety_scan.png" width="300">
+    - <img src="./extras_extra/safety_scan.png" width="500">
 - You MUST have the Pixels app on your phone completely shut down, otherwise the die will not connect to your computer. It helps if you have connect/disconnect flashes configured for your die.
 1. Install Chrome extension into your browser.
 2. Install VLC Media Player (currently required to run, even without sound effects enabled).
@@ -84,7 +86,7 @@ This is the simplest way to use this app, requiring minimal setup. More advanced
         - I have no idea what will happen if you do this, as I only have a single D20 so far.
 6. Load a character in Hero Lab Online or Pathbuilder 2e Online.
     - If you do not see duplicated modifiers, refresh the page. You should see these even if main.exe is not running.
-    - Without a die rolled, the additional data on screen will be yellow in color.
+    - When a die has not yet been rolled, the additional data on screen will be yellow in color, as well as being the same number as the modifier. By default, actual rolled numbers 2-10 will be yellow, 11-19 will be blue, 1's will be red, and 20s will be green. This can be changed within the extensions settings.
         - See main screenshots at top of the page.
 7. Run main.exe
     - A tray icon will appear in Windows.
